@@ -1,390 +1,954 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>การประเมินปริมาณการรับประทานอาหารโดยใช้ภาพถ่ายในผู้สูงอายุ</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แผนลดน้ำหนัก 8 สัปดาห์</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* --- สไตล์ดั้งเดิมของคุณทั้งหมด --- */
-body{
-font-family:'Segoe UI',sans-serif;
-background:linear-gradient(135deg,#eef2ff,#f8fbff);
-text-align:center;
-padding:30px;
-color:#2c3e50;
-}
+  :root {
+    --coral: #FF6B6B;
+    --peach: #FFA07A;
+    --mint: #4ECDC4;
+    --cream: #FFF9F0;
+    --warm-white: #FFFEF9;
+    --brown: #3D2B1F;
+    --gold: #E8A838;
+    --soft-pink: #FFE4E1;
+    --light-mint: #E0F7F5;
+    --shadow: rgba(61,43,31,0.08);
+  }
 
-h2{ margin-bottom:10px; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-.section{
-background:white;
-padding:25px;
-margin:25px auto;
-max-width:1000px;
-border-radius:25px;
-box-shadow:0 20px 40px rgba(0,0,0,0.08);
-}
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: var(--cream);
+    color: var(--brown);
+    min-height: 100vh;
+  }
 
-select,input{
-padding:8px;
-border-radius:8px;
-margin:5px;
-border:1px solid #dfe6ff;
-}
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FFA07A 50%, #FFD166 100%);
+    padding: 60px 24px 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 280px; height: 280px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Prompt', sans-serif;
+    font-size: clamp(26px, 6vw, 42px);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+  .hero p {
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+    font-weight: 300;
+    max-width: 400px;
+    margin: 0 auto 28px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    border-radius: 30px;
+    padding: 10px 20px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .stat-pill span { font-size: 20px; display: block; font-weight: 700; }
 
-.image-compare{
-display:flex;
-justify-content:center;
-align-items:stretch;
-margin-top:30px;
-border-radius:25px;
-overflow:hidden;
-box-shadow:0 15px 35px rgba(0,0,0,0.08);
-}
+  /* CONTAINER */
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+  }
 
-.image-card{
-flex:1;
-padding:25px;
-background:#f9fbff;
-}
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'Prompt', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--brown);
+    margin: 40px 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .icon-coral { background: #FFE4E1; }
+  .icon-mint  { background: #E0F7F5; }
+  .icon-gold  { background: #FFF3D0; }
 
-.image-card:first-child{
-border-right:4px solid #e0e6ff;
-}
+  /* INTRO CARD */
+  .intro-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    margin-top: -30px;
+    box-shadow: 0 4px 20px var(--shadow);
+    border-left: 5px solid var(--coral);
+    position: relative;
+    z-index: 10;
+  }
+  .intro-card h2 {
+    font-family: 'Prompt', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--coral);
+  }
+  .intro-card p { font-size: 14.5px; line-height: 1.8; color: #5a4a3a; }
 
-.image-title{
-font-weight:700;
-margin-bottom:15px;
-font-size:18px;
-letter-spacing:1px;
-}
+  /* CALORIE BOX */
+  .calorie-box {
+    background: linear-gradient(135deg, var(--coral), var(--peach));
+    border-radius: 20px;
+    padding: 24px;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(255,107,107,0.25);
+  }
+  .calorie-box .big-num {
+    font-family: 'Prompt', sans-serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .calorie-box .label { font-size: 14px; opacity: 0.85; margin-bottom: 16px; }
+  .calorie-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .calorie-item {
+    background: rgba(255,255,255,0.18);
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .calorie-item .val { font-size: 22px; font-weight: 700; }
+  .calorie-item .lbl { font-size: 12px; opacity: 0.85; }
 
-.before-title{ color:#3498db; }
-.after-title{ color:#2ecc71; }
+  /* MACRO BARS */
+  .macro-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .macro-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .macro-row:last-child { margin-bottom: 0; }
+  .macro-label { width: 80px; font-size: 13px; font-weight: 600; color: #5a4a3a; }
+  .macro-bar-wrap { flex: 1; background: #f5f0eb; border-radius: 8px; height: 10px; overflow: hidden; }
+  .macro-bar { height: 100%; border-radius: 8px; }
+  .macro-bar.protein { background: linear-gradient(90deg, var(--coral), #ff9a8b); }
+  .macro-bar.carb    { background: linear-gradient(90deg, var(--gold), #ffd57e); }
+  .macro-bar.fat     { background: linear-gradient(90deg, var(--mint), #80e8e3); }
+  .macro-g { font-size: 13px; font-weight: 600; color: var(--brown); width: 55px; text-align: right; }
 
-img{
-max-width:100%;
-border-radius:15px;
-margin-top:15px;
-box-shadow:0 10px 25px rgba(0,0,0,0.1);
-}
+  /* WEEK SCHEDULE */
+  .week-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .day-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px var(--shadow);
+    transition: transform 0.2s;
+  }
+  .day-card:hover { transform: translateY(-2px); }
+  .day-header {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .day-header.cardio  { background: linear-gradient(135deg, #FFE4E1, #FFF0EE); border-left: 4px solid var(--coral); }
+  .day-header.strength{ background: linear-gradient(135deg, #E0F7F5, #F0FDFC); border-left: 4px solid var(--mint); }
+  .day-header.rest    { background: linear-gradient(135deg, #FFF3D0, #FFFBE8); border-left: 4px solid var(--gold); }
+  .day-header.combo   { background: linear-gradient(135deg, #F0E8FF, #FAF5FF); border-left: 4px solid #A78BFA; }
+  .day-name { font-family: 'Prompt', sans-serif; font-size: 15px; font-weight: 600; }
+  .day-type { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; }
+  .tag-cardio   { background: var(--coral); color: #fff; }
+  .tag-strength { background: var(--mint); color: #fff; }
+  .tag-rest     { background: var(--gold); color: #fff; }
+  .tag-combo    { background: #A78BFA; color: #fff; }
+  .day-body { padding: 16px 18px; }
+  .exercise-list { list-style: none; }
+  .exercise-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f5f0eb;
+    font-size: 14px;
+  }
+  .exercise-list li:last-child { border-bottom: none; }
+  .ex-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .ex-name { font-weight: 600; color: var(--brown); }
+  .ex-detail { color: #8a7a6a; font-size: 13px; margin-top: 2px; }
+  .duration-badge {
+    margin-left: auto;
+    font-size: 12px;
+    color: #8a7a6a;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
 
-button{
-padding:12px 30px;
-border:none;
-border-radius:14px;
-background:linear-gradient(135deg,#4facfe,#00f2fe);
-color:white;
-cursor:pointer;
-margin-top:25px;
-font-weight:600;
-font-size:15px;
-transition:0.3s;
-}
+  /* MEAL PLAN */
+  .meal-section {
+    display: grid;
+    gap: 12px;
+  }
+  .meal-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .meal-header {
+    padding: 13px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Prompt', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .meal-header.bk  { background: #FFF9E6; border-left: 4px solid #FFC93C; }
+  .meal-header.lk  { background: #FFF0EE; border-left: 4px solid var(--coral); }
+  .meal-header.sn  { background: #E0F7F5; border-left: 4px solid var(--mint); }
+  .meal-header.dn  { background: #F0E8FF; border-left: 4px solid #A78BFA; }
+  .meal-body { padding: 14px 18px; }
+  .food-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px dashed #f0ebe5;
+    font-size: 14px;
+  }
+  .food-item:last-child { border-bottom: none; }
+  .food-cal { margin-left: auto; font-size: 12px; color: var(--coral); font-weight: 700; flex-shrink: 0; }
 
-button:hover{
-transform:translateY(-3px);
-box-shadow:0 10px 25px rgba(0,0,0,0.15);
-}
+  /* TIPS */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 480px) { .tips-grid { grid-template-columns: 1fr; } }
+  .tip-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  .tip-emoji { font-size: 28px; margin-bottom: 10px; }
+  .tip-title { font-family: 'Prompt', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .tip-text { font-size: 13px; color: #6a5a4a; line-height: 1.7; }
 
-.diff-section{
-margin-top:40px;
-padding:30px;
-background:linear-gradient(135deg,#fff6f6,#ffecec);
-border-radius:25px;
-box-shadow:0 15px 35px rgba(0,0,0,0.08);
-}
+  /* PHASE TABLE */
+  .phase-table { width: 100%; border-collapse: collapse; }
+  .phase-table th {
+    background: linear-gradient(135deg, var(--coral), var(--peach));
+    color: #fff;
+    padding: 12px 14px;
+    text-align: left;
+    font-family: 'Prompt', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .phase-table th:first-child { border-radius: 12px 0 0 0; }
+  .phase-table th:last-child  { border-radius: 0 12px 0 0; }
+  .phase-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0ebe5;
+    font-size: 13.5px;
+    vertical-align: top;
+    background: #fff;
+  }
+  .phase-table tr:last-child td { border-bottom: none; }
+  .phase-table tr:last-child td:first-child { border-radius: 0 0 0 12px; }
+  .phase-table tr:last-child td:last-child  { border-radius: 0 0 12px 0; }
+  .phase-table tr:nth-child(even) td { background: #fdf9f5; }
+  .phase-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .ph1 { background: #FFE4E1; color: var(--coral); }
+  .ph2 { background: #E0F7F5; color: #2a9d8f; }
+  .ph3 { background: #FFF3D0; color: #D68910; }
 
-.diff-title{
-font-weight:700;
-margin-bottom:20px;
-font-size:20px;
-color:#e74c3c;
-}
+  .table-wrap {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
 
-.patient-bg{
-position:relative;
-overflow:hidden;
-background-image:url('https://png.pngtree.com/thumb_back/fh260/back_our/20190619/ourmid/pngtree-european-cute-cartoon-catering-advertising-details-page-watercolor-background-material-image_135714.jpg');
-background-size:cover;
-background-position:center;
-}
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 30px 16px;
+    background: var(--brown);
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  .footer strong { color: rgba(255,255,255,0.9); }
 
-.patient-bg::before{
-content:"";
-position:absolute;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(255,255,255,0);
-z-index:0;
-}
+  /* SNACK TIPS */
+  .snack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .snack-pill {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 2px 8px var(--shadow);
+    border-top: 3px solid var(--mint);
+  }
+  .snack-pill .s-cal { font-size: 11px; color: var(--coral); font-weight: 700; margin-top: 4px; }
 
-.patient-bg > *{ position:relative; z-index:1; }
-
-.patient-title-box{
-display:inline-block;
-background:rgba(255,255,255,0.75);
-backdrop-filter:blur(6px);
-padding:12px 30px;
-border-radius:20px;
-box-shadow:0 10px 30px rgba(0,0,0,0.1);
-margin-bottom:20px;
-}
-
-.patient-title-box h3{ margin:0; color:#2c3e50; font-weight:700; }
-#result{ margin-top:15px; font-weight:600; font-size:16px; }
-
-/* ส่วนค้นหาเพิ่มเติม */
-.search-container { margin-bottom: 10px; }
-.search-container input { width: 150px; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .animate { animation: fadeUp 0.5s ease forwards; }
+  .d1{animation-delay:0.05s} .d2{animation-delay:0.1s} .d3{animation-delay:0.15s}
+  .d4{animation-delay:0.2s}  .d5{animation-delay:0.25s} .d6{animation-delay:0.3s}
+  .d7{animation-delay:0.35s}
 </style>
 </head>
-
 <body>
 
-<h2>การประเมินปริมาณการรับประทานอาหารโดยใช้ภาพถ่ายในผู้สูงอายุ</h2>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">💪 แผนครบจบในที่เดียว</div>
+  <h1>ลดพุง ลดน้ำหนัก<br>8 สัปดาห์</h1>
+  <p>ออกแบบเฉพาะสำหรับคุณ — คาร์ดิโอเมน + ทานขนมได้ + ลดจริง</p>
+  <div class="hero-stats">
+    <div class="stat-pill"><span>~1,500</span>แคลอรี่/วัน</div>
+    <div class="stat-pill"><span>5×</span>ออกกำลังกาย/สัปดาห์</div>
+    <div class="stat-pill"><span>−3–5 kg</span>เป้าหมาย 8 สัปดาห์</div>
+  </div>
+</div>
 
-<div class="section patient-bg">
-    <div class="patient-title-box">
-        <h3>Patient Information (ข้อมูลผู้ป่วย)</h3>
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="intro-card animate d1">
+    <h2>🔍 วิเคราะห์สำหรับคุณ</h2>
+    <p>ผู้หญิงที่ต้องการ "เผาผลาญ" และ "คุมอาหาร" ไปพร้อมกัน<br><br>
+    คุณชอบคาร์ดิโอ ✅ และชอบกินขนมขบเคี้ยว ✅ — แผนนี้จึงออกแบบให้ <strong>คาร์ดิโอเป็นแกนหลัก + มีโควต้าขนม</strong> เพื่อให้ทำได้จริงระยะยาว ไม่อดจนทรมาน!</p>
+  </div>
+
+  <!-- CALORIE -->
+  <div class="section-title animate d2">
+    <div class="icon icon-coral">🔥</div> เป้าหมายแคลอรี่รายวัน
+  </div>
+  <div class="calorie-box animate d2">
+    <div class="label">แคลอรี่ที่ควรกินต่อวัน (สร้าง deficit ~500 kcal)</div>
+    <div class="big-num">1,500</div>
+    <div style="font-size:13px; opacity:0.8; margin-top:4px;">กิโลแคลอรี่</div>
+    <div class="calorie-row">
+      <div class="calorie-item">
+        <div class="val">~2,000</div>
+        <div class="lbl">TDEE ประมาณการ</div>
+      </div>
+      <div class="calorie-item">
+        <div class="val">−500</div>
+        <div class="lbl">แคลอรี่ส่วนขาด/วัน</div>
+      </div>
     </div>
+  </div>
 
-    <div class="search-container">
-        <input type="text" id="searchName" placeholder="🔍 ค้นหาชื่อ..." oninput="filterPatients()">
-        <input type="text" id="searchHN" placeholder="🔍 ค้นหา HN..." oninput="filterPatients()">
+  <!-- MACRO -->
+  <div class="section-title animate d3">
+    <div class="icon icon-mint">🥗</div> สัดส่วนสารอาหาร (Macros)
+  </div>
+  <div class="macro-card animate d3">
+    <div class="macro-row">
+      <div class="macro-label">🥩 โปรตีน</div>
+      <div class="macro-bar-wrap"><div class="macro-bar protein" style="width:40%"></div></div>
+      <div class="macro-g">90–100g</div>
     </div>
-
-    <div style="display:flex;justify-content:center;margin-bottom:20px;">
-        <select id="patientSelect" style="min-width: 250px;"></select>
+    <div class="macro-row">
+      <div class="macro-label">🍚 คาร์บ</div>
+      <div class="macro-bar-wrap"><div class="macro-bar carb" style="width:38%"></div></div>
+      <div class="macro-g">130–150g</div>
     </div>
+    <div class="macro-row">
+      <div class="macro-label">🥑 ไขมัน</div>
+      <div class="macro-bar-wrap"><div class="macro-bar fat" style="width:22%"></div></div>
+      <div class="macro-g">40–50g</div>
+    </div>
+    <p style="font-size:12px; color:#9a8a7a; margin-top:14px; line-height:1.7;">💡 โปรตีนสูงช่วยรักษากล้ามเนื้อขณะลดน้ำหนัก และอิ่มนานกว่า — ลดอยากกินขนมตอนบ่ายด้วย!</p>
+  </div>
 
-    <div id="patientCard" style="display:none; background:linear-gradient(135deg,#ffffff,#f2f6ff); padding:25px; border-radius:20px; box-shadow:0 15px 30px rgba(0,0,0,0.08); max-width:500px; margin:0 auto;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
-            <div style="text-align: left;">
-                <h2 id="pName" style="margin:0;"></h2>
-                <small id="pHNDisplay" style="color:#7f8c8d; font-weight:bold;"></small>
+  <!-- PHASE OVERVIEW -->
+  <div class="section-title animate d3">
+    <div class="icon icon-gold">📅</div> แผน 3 เฟส (8 สัปดาห์)
+  </div>
+  <div class="table-wrap animate d3">
+    <table class="phase-table">
+      <tr>
+        <th>เฟส</th>
+        <th>สัปดาห์</th>
+        <th>โฟกัส</th>
+        <th>เวลาออกกำลังกาย</th>
+        <th>เป้าหมาย</th>
+      </tr>
+      <tr>
+        <td><span class="phase-badge ph1">เฟส 1</span></td>
+        <td>1–2</td>
+        <td>สร้างนิสัย, ปรับร่างกาย</td>
+        <td>30–35 นาที/วัน</td>
+        <td>ลด 0.5–1 kg</td>
+      </tr>
+      <tr>
+        <td><span class="phase-badge ph2">เฟส 2</span></td>
+        <td>3–6</td>
+        <td>เผาผลาญหลัก, เพิ่มความเข้มข้น</td>
+        <td>40–50 นาที/วัน</td>
+        <td>ลด 1.5–2.5 kg</td>
+      </tr>
+      <tr>
+        <td><span class="phase-badge ph3">เฟส 3</span></td>
+        <td>7–8</td>
+        <td>Maintain + เพิ่มแรง Core</td>
+        <td>45–55 นาที/วัน</td>
+        <td>ลด 1–1.5 kg + หุ่นกระชับ</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- WEEKLY SCHEDULE -->
+  <div class="section-title animate d4">
+    <div class="icon icon-coral">🗓️</div> ตารางออกกำลังกายรายสัปดาห์
+  </div>
+  <div class="week-grid">
+
+    <div class="day-card animate d4">
+      <div class="day-header cardio">
+        <span class="day-name">วันจันทร์ 🟥</span>
+        <span class="day-type tag-cardio">Cardio</span>
+      </div>
+      <div class="day-body">
+        <ul class="exercise-list">
+          <li>
+            <span class="ex-icon">🚶‍♀️</span>
+            <div>
+              <div class="ex-name">วอร์มอัพ — เดินเร็ว</div>
+              <div class="ex-detail">เดินเร็วในสถานที่หรือสวน</div>
             </div>
-            <span id="pDX" style="background:#ff7675; color:white; padding:6px 12px; border-radius:20px; font-size:13px; font-weight:600;"></span>
-        </div>
-        <div style="display:flex;justify-content:space-between;text-align:center;">
-            <div><div style="font-size:14px;color:#888;">Weight</div><div id="pWeight" style="font-size:20px;font-weight:700;"></div></div>
-            <div><div style="font-size:14px;color:#888;">Height</div><div id="pHeight" style="font-size:20px;font-weight:700;"></div></div>
-            <div><div style="font-size:14px;color:#888;">BMI</div><div id="pBMI" style="font-size:20px;font-weight:700;"></div></div>
-        </div>
+            <span class="duration-badge">5 นาที</span>
+          </li>
+          <li>
+            <span class="ex-icon">🏃‍♀️</span>
+            <div>
+              <div class="ex-name">วิ่งสลับเดิน (Interval)</div>
+              <div class="ex-detail">วิ่ง 2 นาที / เดิน 1 นาที × 8 รอบ</div>
+            </div>
+            <span class="duration-badge">24 นาที</span>
+          </li>
+          <li>
+            <span class="ex-icon">🧘‍♀️</span>
+            <div>
+              <div class="ex-name">คูลดาวน์ + ยืดกล้ามเนื้อ</div>
+              <div class="ex-detail">ยืด Quad, Hamstring, Hip Flexor</div>
+            </div>
+            <span class="duration-badge">6 นาที</span>
+          </li>
+        </ul>
+      </div>
     </div>
+
+    <div class="day-card animate d4">
+      <div class="day-header combo">
+        <span class="day-name">วันอังคาร 🟪</span>
+        <span class="day-type tag-combo">Cardio + Core</span>
+      </div>
+      <div class="day-body">
+        <ul class="exercise-list">
+          <li>
+            <span class="ex-icon">🎵</span>
+            <div>
+              <div class="ex-name">เต้น Zumba / Dance Workout</div>
+              <div class="ex-detail">ตาม YouTube — เพลงที่ชอบ</div>
+            </div>
+            <span class="duration-badge">20 นาที</span>
+          </li>
+          <li>
+            <span class="ex-icon">💪</span>
+            <div>
+              <div class="ex-name">Plank</div>
+              <div class="ex-detail">3 เซต × 30–45 วินาที พัก 20 วินาที</div>
+            </div>
+            <span class="duration-badge">5 นาที</span>
+          </li>
+          <li>
+            <span class="ex-icon">🔄</span>
+            <div>
+              <div class="ex-name">Bicycle Crunch</div>
+              <div class="ex-detail">3 เซต × 20 ครั้ง (สลับซ้าย-ขวา)</div>
+            </div>
+            <span class="duration-badge">5 นาที</span>
+          </li>
+          <li>
+            <span class="ex-icon">📐</span>
+            <div>
+              <div class="ex-name">Leg Raise</div>
+              <div class="ex-detail">3 เซต × 15 ครั้ง</div>
+            </div>
+            <span class="duration-badge">5 นาที</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="day-card animate d5">
+      <div class="day-header rest">
+        <span class="day-name">วันพุธ ⭐</span>
+        <span class="day-type tag-rest">Active Rest</span>
+      </div>
+      <div class="day-body">
+        <ul class="exercise-list">
+          <li>
+            <span class="ex-icon">🚶‍♀️</span>
+            <div>
+              <div class="ex-name">เดิน 7,000–8,000 ก้าว</div>
+              <div class="ex-detail">แค่เดินในชีวิตประจำวัน ไม่ต้องวิ่ง</div>
+            </div>
+            <span class="duration-badge">ทั้งวัน</span>
+          </li>
+          <li>
+            <span class="ex-icon">🧘</span>
+            <div>
+              <div class="ex-name">ยืดเหยียดทั่วร่าง / Yoga เบา</div>
+              <div class="ex-detail">โฟกัสกล้ามเนื้อที่เมื่อยวันก่อน</div>
+            </div>
+            <span class="duration-badge">15 นาที</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="day-card animate d5">
+      <div class="day-header cardio">
+        <span class="day-name">วันพฤหัสบดี 🟥</span>
+        <span class="day-type tag-cardio">Cardio หนัก</span>
+      </div>
+      <div class="day-body">
+        <ul class="exercise-list">
+          <li>
+            <span class="ex-icon">🚲</span>
+            <div>
+              <div class="ex-name">ปั่นจักรยาน (จริงหรือ Stationary)</div>
+              <div class="ex-detail">ความเร็วปานกลาง–เร็ว HR 65–75% max</div>
+            </div>
+            <span class="duration-badge">30 นาที</span>
+          </li>
+          <li>
+            <span class="ex-icon">⬆️</span>
+            <div>
+              <div class="ex-name">ขึ้น-ลง บันได</div>
+              <div class="ex-detail">ขึ้นลงบันได 3–5 ชั้น × 4 รอบ</div>
+            </div>
+            <span class="duration-badge">10 นาที</span>
+          </li>
+          <li>
+            <span class="ex-icon">🧘‍♀️</span>
+            <div>
+              <div class="ex-name">ยืดกล้ามเนื้อ</div>
+              <div class="ex-detail">เน้นขาและสะโพก</div>
+            </div>
+            <span class="duration-badge">5 นาที</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="day-card animate d6">
+      <div class="day-header combo">
+        <span class="day-name">วันศุกร์ 🟪</span>
+        <span class="day-type tag-combo">Full Body Light</span>
+      </div>
+      <div class="day-body">
+        <ul class="exercise-list">
+          <li>
+            <span class="ex-icon">🏊‍♀️</span>
+            <div>
+              <div class="ex-name">ว่ายน้ำ หรือ Aerobics คลาส</div>
+              <div class="ex-detail">ถ้าไม่มีสระ → เต้น HIIT เบา YouTube</div>
+            </div>
+            <span class="duration-badge">25 นาที</span>
+          </li>
+          <li>
+            <span class="ex-icon">🦵</span>
+            <div>
+              <div class="ex-name">Squat</div>
+              <div class="ex-detail">3 เซต × 20 ครั้ง (Bodyweight)</div>
+            </div>
+            <span class="duration-badge">6 นาที</span>
+          </li>
+          <li>
+            <span class="ex-icon">🔙</span>
+            <div>
+              <div class="ex-name">Glute Bridge</div>
+              <div class="ex-detail">3 เซต × 20 ครั้ง ช่วยลดพุงด้านล่าง</div>
+            </div>
+            <span class="duration-badge">5 นาที</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="day-card animate d6">
+      <div class="day-header cardio">
+        <span class="day-name">วันเสาร์ 🟥</span>
+        <span class="day-type tag-cardio">Long Cardio</span>
+      </div>
+      <div class="day-body">
+        <ul class="exercise-list">
+          <li>
+            <span class="ex-icon">🏃‍♀️</span>
+            <div>
+              <div class="ex-name">วิ่งหรือเดินเร็วต่อเนื่อง</div>
+              <div class="ex-detail">Steady State — ความหนักปานกลาง พูดได้แต่หายใจแรง</div>
+            </div>
+            <span class="duration-badge">40–45 นาที</span>
+          </li>
+          <li>
+            <span class="ex-icon">🧘‍♀️</span>
+            <div>
+              <div class="ex-name">ยืดเหยียดหลังออกกำลังกาย</div>
+              <div class="ex-detail">ใช้เวลาให้เต็มที่ เพราะมีเวลาวันหยุด</div>
+            </div>
+            <span class="duration-badge">10 นาที</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="day-card animate d7">
+      <div class="day-header rest">
+        <span class="day-name">วันอาทิตย์ 💛</span>
+        <span class="day-type tag-rest">Rest Day</span>
+      </div>
+      <div class="day-body">
+        <ul class="exercise-list">
+          <li>
+            <span class="ex-icon">😴</span>
+            <div>
+              <div class="ex-name">พักผ่อนร่างกาย</div>
+              <div class="ex-detail">ร่างกายซ่อมแซมตัวเองในวันพัก — ห้ามข้ามวันนี้!</div>
+            </div>
+            <span class="duration-badge">—</span>
+          </li>
+          <li>
+            <span class="ex-icon">🧴</span>
+            <div>
+              <div class="ex-name">นวดหน้าท้อง + สครับ (Optional)</div>
+              <div class="ex-detail">ช่วยกระชับผิว ระหว่างที่ลดขนาดพุง</div>
+            </div>
+            <span class="duration-badge">Optional</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MEAL PLAN -->
+  <div class="section-title animate d4">
+    <div class="icon icon-gold">🍽️</div> แผนอาหารรายวัน (ตัวอย่าง)
+  </div>
+  <div class="meal-section">
+
+    <div class="meal-card animate d4">
+      <div class="meal-header bk">☀️ เช้า — 7:00–8:00 น.</div>
+      <div class="meal-body">
+        <div class="food-item">
+          <span>🥚</span>
+          <span>ไข่ต้ม / ไข่เจียว 2 ฟอง + ข้าวกล้อง ½ ถ้วย</span>
+          <span class="food-cal">~280 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>🍌</span>
+          <span>กล้วยน้ำว้า 1 ผล หรือ ส้ม 1 ผล</span>
+          <span class="food-cal">~80 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>🥛</span>
+          <span>นมจืดพร่องมันเนย 1 กล่อง (200 ml)</span>
+          <span class="food-cal">~80 kcal</span>
+        </div>
+        <div class="food-item" style="background:#fff9f0; border-radius:8px; padding:8px; margin-top:4px; border-bottom:none;">
+          <span>💡</span>
+          <span style="font-size:13px; color:#8a7a6a;">ดื่มน้ำเปล่า 1–2 แก้วก่อนอาหาร ช่วยลดความหิว</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meal-card animate d4">
+      <div class="meal-header sn">🌿 ของว่างเช้า — 10:00 น.</div>
+      <div class="meal-body">
+        <div class="food-item">
+          <span>🍎</span>
+          <span>แอปเปิ้ล 1 ลูก หรือ กล้วย + ถั่วอัลมอนด์ 10 เม็ด</span>
+          <span class="food-cal">~120 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>💧</span>
+          <span>น้ำเปล่าหรือชาเขียวไม่หวาน</span>
+          <span class="food-cal">0 kcal</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meal-card animate d5">
+      <div class="meal-header lk">☀️ กลางวัน — 12:00–13:00 น.</div>
+      <div class="meal-body">
+        <div class="food-item">
+          <span>🍗</span>
+          <span>อกไก่ย่าง / ต้ม / ผัดน้ำมันน้อย 150–200g</span>
+          <span class="food-cal">~200 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>🌾</span>
+          <span>ข้าวกล้อง ½–¾ ถ้วย หรือ เส้นหมี่ ½ ห่อ</span>
+          <span class="food-cal">~160 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>🥦</span>
+          <span>ผักสด / ผักต้ม 1 ถ้วย (ไม่จำกัด)</span>
+          <span class="food-cal">~40 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>🍜</span>
+          <span>หรือ ก๋วยเตี๋ยวน้ำใส + ผัก + เนื้อ ไม่ใส่น้ำตาล</span>
+          <span class="food-cal">~380 kcal</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meal-card animate d5">
+      <div class="meal-header sn">🍿 ของว่างบ่าย — 15:00–16:00 น. (โควต้าขนม!)</div>
+      <div class="meal-body">
+        <div class="food-item">
+          <span>✅</span>
+          <span><strong>โควต้าขนมขบเคี้ยว 100–150 kcal</strong> — เลือกอย่างใดอย่างหนึ่ง</span>
+          <span class="food-cal"></span>
+        </div>
+        <div class="food-item">
+          <span>🍿</span>
+          <span>ป็อปคอร์น ไม่เนย (แบบแคลต่ำ) 20g</span>
+          <span class="food-cal">~90 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>🌾</span>
+          <span>Rice cracker 5–6 ชิ้น</span>
+          <span class="food-cal">~100 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>🍫</span>
+          <span>ดาร์กช็อคโกแลต 70%+ 2 ชิ้นเล็ก</span>
+          <span class="food-cal">~100 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>🧀</span>
+          <span>แครกเกอร์ + กรีกโยเกิร์ต</span>
+          <span class="food-cal">~120 kcal</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="meal-card animate d6">
+      <div class="meal-header dn">🌙 เย็น — 18:00–19:00 น.</div>
+      <div class="meal-body">
+        <div class="food-item">
+          <span>🐟</span>
+          <span>ปลานึ่ง / ต้ม / ทอดน้ำมันน้อย หรือ เต้าหู้แน่น</span>
+          <span class="food-cal">~150 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>🥗</span>
+          <span>ผักสลัด + น้ำสลัดญี่ปุ่นเบา หรือ ผักต้มหลากสี</span>
+          <span class="food-cal">~60 kcal</span>
+        </div>
+        <div class="food-item">
+          <span>🌾</span>
+          <span>ข้าวกล้อง ½ ถ้วย (ลดจากมื้อกลางวัน)</span>
+          <span class="food-cal">~100 kcal</span>
+        </div>
+        <div class="food-item" style="background:#fff0ee; border-radius:8px; padding:8px; margin-top:4px; border-bottom:none;">
+          <span>⚠️</span>
+          <span style="font-size:13px; color: #c0392b; font-weight:600;">หลีกเลี่ยงอาหารหลัง 20:00 น. ให้มากที่สุด</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SNACK SWAPS -->
+  <div class="section-title animate d5">
+    <div class="icon icon-mint">🍟</div> ขนมขบเคี้ยว — เลือกฉลาด (ให้ตัวเองวันละ 1 อย่าง)
+  </div>
+  <div class="snack-grid animate d5">
+    <div class="snack-pill">🍿 ป็อปคอร์นไม่เนย<div class="s-cal">20g = ~90 kcal</div></div>
+    <div class="snack-pill">🌾 Rice Cracker<div class="s-cal">5 ชิ้น = ~100 kcal</div></div>
+    <div class="snack-pill">🥜 ถั่วอบ<div class="s-cal">1 กำมือ = ~120 kcal</div></div>
+    <div class="snack-pill">🫐 ผลไม้อบแห้ง<div class="s-cal">30g = ~100 kcal</div></div>
+    <div class="snack-pill">🍫 Dark Choc 70%<div class="s-cal">2 ชิ้น = ~100 kcal</div></div>
+    <div class="snack-pill">🧁 Protein Bar<div class="s-cal">เลือก <150 kcal</div></div>
+  </div>
+  <div style="background:#fff3cd; border-radius:14px; padding:14px 18px; margin-top:12px; font-size:13.5px; color:#6d4c00; line-height:1.7;" class="animate d5">
+    <strong>📌 กฎขนม:</strong> เลือกได้ 1 อย่าง/วัน ห้ามกิน 2 อย่าง — และกินหลังออกกำลังกายดีที่สุด เพราะร่างกายจะเผาผลาญได้ดีกว่า!
+  </div>
+
+  <!-- TIPS -->
+  <div class="section-title animate d6">
+    <div class="icon icon-coral">💡</div> เคล็ดลับสำคัญ
+  </div>
+  <div class="tips-grid">
+    <div class="tip-card animate d6">
+      <div class="tip-emoji">💧</div>
+      <div class="tip-title">ดื่มน้ำให้พอ</div>
+      <div class="tip-text">อย่างน้อย 8–10 แก้ว/วัน (2 ลิตร) น้ำช่วยลดความหิวและเร่งเผาผลาญ โดยเฉพาะก่อนอาหาร 30 นาที</div>
+    </div>
+    <div class="tip-card animate d6">
+      <div class="tip-emoji">😴</div>
+      <div class="tip-title">นอนให้ครบ 7–8 ชม.</div>
+      <div class="tip-text">อดนอนทำให้ฮอร์โมนหิว (Ghrelin) พุ่ง — อยากกินขนมเพิ่มขึ้น 2–3 เท่า! นอนคือส่วนหนึ่งของการลดน้ำหนัก</div>
+    </div>
+    <div class="tip-card animate d6">
+      <div class="tip-emoji">📱</div>
+      <div class="tip-title">จดบันทึกอาหาร</div>
+      <div class="tip-text">ใช้ MyFitnessPal หรือแอปใดก็ได้ จดทุกอย่างที่กิน — รวมถึงขนม — ช่วยให้รู้ตัวและไม่เกิน 1,500 kcal</div>
+    </div>
+    <div class="tip-card animate d6">
+      <div class="tip-emoji">⏰</div>
+      <div class="tip-title">กินให้ตรงเวลา</div>
+      <div class="tip-text">ห้ามข้ามมื้อเช้า — กินเช้าช่วยให้ metabolism ทำงานได้ดีตลอดวัน และลดการกินดึก</div>
+    </div>
+    <div class="tip-card animate d7">
+      <div class="tip-emoji">🏃‍♀️</div>
+      <div class="tip-title">NEAT — เดินให้มากขึ้น</div>
+      <div class="tip-text">จอดรถไกลขึ้น ขึ้นบันไดแทนลิฟต์ เดินไปซื้อของ — กิจกรรมเล็กๆ รวมกันเผาได้ถึง 300–400 kcal/วัน!</div>
+    </div>
+    <div class="tip-card animate d7">
+      <div class="tip-emoji">📏</div>
+      <div class="tip-title">วัดรอบเอว ไม่ใช่แค่น้ำหนัก</div>
+      <div class="tip-text">เป้าหมายคือ "ลดพุง" — วัดรอบเอวทุกอาทิตย์ บางสัปดาห์น้ำหนักไม่ลง แต่รอบเอวลดได้!</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS CHECK -->
+  <div class="section-title animate d7">
+    <div class="icon icon-mint">📊</div> ตรวจสอบความก้าวหน้า
+  </div>
+  <div class="table-wrap animate d7">
+    <table class="phase-table">
+      <tr>
+        <th>ช่วงเวลา</th>
+        <th>สิ่งที่ควรทำ</th>
+        <th>เป้าหมาย</th>
+      </tr>
+      <tr>
+        <td>ทุกวัน</td>
+        <td>จดอาหาร + ดื่มน้ำ + Step count</td>
+        <td>สร้างวินัย</td>
+      </tr>
+      <tr>
+        <td>ทุกสัปดาห์</td>
+        <td>ชั่งน้ำหนักตอนเช้า + วัดรอบเอว</td>
+        <td>เห็นความเปลี่ยนแปลง</td>
+      </tr>
+      <tr>
+        <td>ทุก 2 สัปดาห์</td>
+        <td>ถ่ายรูปเปรียบเทียบ (ชุดเดิม, มุมเดิม)</td>
+        <td>กำลังใจ + หลักฐาน</td>
+      </tr>
+      <tr>
+        <td>ทุกเดือน</td>
+        <td>ประเมินแผน — ถ้าไม่ลด เพิ่ม intensity หรือลดแคล</td>
+        <td>ปรับแผนให้เหมาะสม</td>
+      </tr>
+    </table>
+  </div>
+
 </div>
 
-<div class="section">
-    <div class="image-compare">
-        <div class="image-card">
-            <div class="image-title before-title">BEFORE (ก่อนทาน)</div>
-            <input type="file" accept="image/*" id="beforeInput">
-            <img id="beforeImg">
-        </div>
-        <div class="image-card">
-            <div class="image-title after-title">AFTER (หลังทาน)</div>
-            <input type="file" accept="image/*" id="afterInput">
-            <img id="afterImg">
-        </div>
-    </div>
-    <div style="text-align:center;">
-        <button onclick="compareImages()">คำนวณและบันทึก</button>
-    </div>
-    <div id="result"></div>
-    <div class="diff-section">
-        <div class="diff-title">DIFFERENCE HIGHLIGHT</div>
-        <canvas id="diffCanvas"></canvas>
-    </div>
+<!-- FOOTER -->
+<div class="footer">
+  <strong>⚠️ หมายเหตุ:</strong> แผนนี้เป็นแนวทางทั่วไป ควรปรึกษาแพทย์หรือนักโภชนาการ<br>
+  หากมีโรคประจำตัวหรือปัญหาข้อเข่า-ข้อต่อ ก่อนเริ่มโปรแกรม<br><br>
+  <strong>💪 จำไว้:</strong> Consistency > Perfection — ทำได้ 80% ทุกวัน ดีกว่าทำ 100% แค่บางวัน!
 </div>
 
-<div class="section">
-    <h3>Dashboard (การกินอาหาร) (%)</h3>
-    <div style="margin-bottom:15px;">
-        จาก: <input type="date" id="startDate"> ถึง: <input type="date" id="endDate">
-        <button onclick="loadChart()">ดูกราฟ</button>
-        <button onclick="resetDate()">ดูทั้งหมด</button>
-    </div>
-    <canvas id="chartCanvas"></canvas>
-</div>
-
-<script>
-const scriptURL="https://script.google.com/macros/s/AKfycbzSEKwDgxyvTFj2M-5d-Xfp6aLrB4946GuloIb0wzqyYTrk9EivMbkU0oUuarAqXoeb8Q/exec";
-let allPatients = []; // เก็บข้อมูลต้นฉบับไว้ Filter
-let selectedName="";
-let selectedData={};
-let chartInstance=null;
-
-// โหลดข้อมูลผู้ป่วยครั้งแรก
-function loadPatients(){
-    fetch(scriptURL+"?type=patients")
-    .then(res=>res.json())
-    .then(data=>{
-        allPatients = data.slice(1); // เก็บข้อมูลผู้ป่วยทั้งหมด
-        renderDropdown(allPatients);
-    });
-}
-
-// ฟังก์ชันสร้างรายการใน Select
-function renderDropdown(list) {
-    let select=document.getElementById("patientSelect");
-    select.innerHTML='<option value="">-- เลือกคนไข้ --</option>';
-    list.forEach(row => {
-        let option=document.createElement("option");
-        option.value=JSON.stringify(row);
-        // แสดงชื่อและ HN ใน Dropdown (HN อยู่ลำดับ index 5)
-        option.text = `[HN: ${row[5] || '-'}] ${row[0]}`;
-        select.appendChild(option);
-    });
-}
-
-// ฟังก์ชันค้นหา
-function filterPatients() {
-    let sName = document.getElementById("searchName").value.toLowerCase();
-    let sHN = document.getElementById("searchHN").value.toLowerCase();
-    let filtered = allPatients.filter(row => {
-        let matchName = row[0].toString().toLowerCase().includes(sName);
-        let matchHN = row[5] ? row[5].toString().toLowerCase().includes(sHN) : false;
-        return matchName && matchHN;
-    });
-    renderDropdown(filtered);
-}
-
-patientSelect.addEventListener("change",function(){
-    if(!this.value) return;
-    let row=JSON.parse(this.value);
-    selectedName=row[0];
-    let bmi=(row[2]/((row[3]/100)*(row[3]/100))).toFixed(2);
-    
-    // เก็บข้อมูลให้ครบถ้วนเพื่อรอส่ง POST
-    selectedData={
-        name:row[0],
-        dx:row[1],
-        weight:row[2],
-        height:row[3],
-        bmi:bmi,
-        hn:row[5]
-    };
-
-    document.getElementById("patientCard").style.display="block";
-    pName.innerText = row[0];
-    pHNDisplay.innerText = "HN: " + (row[5] || "-");
-    pDX.innerText = row[1];
-    pWeight.innerText = row[2] + " kg";
-    pHeight.innerText = row[3] + " cm";
-    pBMI.innerText = bmi;
-    loadChart();
-});
-
-beforeInput.onchange=()=>loadImage(beforeInput,beforeImg);
-afterInput.onchange=()=>loadImage(afterInput,afterImg);
-
-function loadImage(input,img){
-    let file=input.files[0];
-    if(!file) return;
-    let reader=new FileReader();
-    reader.onload=e=>img.src=e.target.result;
-    reader.readAsDataURL(file);
-}
-
-// ใช้ Logic เดิมจาก Code ตัวเก่าที่คุณส่งมา เพื่อความแม่นยำ
-function compareImages(){
-    if(!selectedName){ alert("กรุณาเลือกข้อมูลผู้ป่วย"); return; }
-    if(!beforeImg.src || !afterImg.src){ alert("กรุณาเลือกรูปก่อน"); return; }
-
-    let canvas=document.getElementById("diffCanvas");
-    let ctx=canvas.getContext("2d");
-
-    // คำนวณขนาดภาพให้เท่ากันโดยใช้ Math.min (ป้องกันรูปไม่เท่ากัน)
-    let width=Math.min(beforeImg.width,afterImg.width);
-    let height=Math.min(beforeImg.height,afterImg.height);
-    canvas.width=width;
-    canvas.height=height;
-
-    ctx.drawImage(beforeImg,0,0,width,height);
-    let data1=ctx.getImageData(0,0,width,height);
-    ctx.drawImage(afterImg,0,0,width,height);
-    let data2=ctx.getImageData(0,0,width,height);
-
-    let diffCount=0;
-    for(let i=0;i<data1.data.length;i+=4){
-        let r1=data1.data[i]; let g1=data1.data[i+1]; let b1=data1.data[i+2];
-        let r2=data2.data[i]; let g2=data2.data[i+1]; let b2=data2.data[i+2];
-        let diff=Math.abs(r1-r2)+Math.abs(g1-g2)+Math.abs(b1-b2);
-        if(diff>60){
-            data1.data[i]=255; data1.data[i+1]=0; data1.data[i+2]=0; data1.data[i+3]=160;
-            diffCount++;
-        } else { data1.data[i+3]=25; }
-    }
-    ctx.putImageData(data1,0,0);
-
-    let diffPercent=((diffCount/(width*height))*100).toFixed(2);
-    result.innerHTML="Difference: "+diffPercent+"%<br>";
-
-    // บันทึกข้อมูลกลับไปยัง Google Sheets
-    fetch(scriptURL,{
-        method:"POST",
-        body:JSON.stringify({
-            date:new Date().toISOString(),
-            name:selectedData.name,
-            hn:selectedData.hn, // ส่ง HN เพิ่มเข้าไป
-            dx:selectedData.dx,
-            weight:selectedData.weight,
-            height:selectedData.height,
-            bmi:selectedData.bmi,
-            diffPercent:diffPercent,
-            pixel:diffCount
-        })
-    })
-    .then(()=>{
-        result.innerHTML+="<br>บันทึกสำเร็จ ✅";
-        loadChart();
-    });
-}
-
-function loadChart(){
-    if(!selectedName) return;
-    let start=startDate.value;
-    let end=endDate.value;
-    fetch(scriptURL+"?type=meals")
-    .then(res=>res.json())
-    .then(data=>{
-        let labels=[]; let values=[];
-        for(let i=1;i<data.length;i++){
-            let rowDate=new Date(data[i][0]);
-            if(data[i][1]===selectedName){
-                if(start && rowDate < new Date(start)) continue;
-                if(end && rowDate > new Date(end+"T23:59:59")) continue;
-                labels.push(rowDate.toLocaleDateString());
-                values.push(parseFloat(data[i][6]));
-            }
-        }
-        drawChart(labels,values);
-    });
-}
-
-function drawChart(labels,values){
-    if(chartInstance) chartInstance.destroy();
-    chartInstance=new Chart(chartCanvas,{
-        type:"line",
-        data:{
-            labels:labels,
-            datasets:[{
-                label:"Diff %",
-                data:values,
-                tension:0.4,
-                borderWidth:3
-            }]
-        },
-        options:{ scales:{ y:{beginAtZero:true,max:100}} }
-    });
-}
-
-function resetDate(){ startDate.value=""; endDate.value=""; loadChart(); }
-window.onload=loadPatients;
-
-</script>
 </body>
 </html>
